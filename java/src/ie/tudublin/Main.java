@@ -10,6 +10,8 @@ public class Main
 
         Animal topCat = new Cat("TopCat");
 
+        Cat ginger = new Cat("Ginger");
+
         System.out.println(misty);
         System.out.println(topCat);
 
@@ -25,6 +27,11 @@ public class Main
         // 1. topcat, Garfield
         // 2. garfield, Garfield 
 
+        while (ginger.numlives > 0 ){
+            Cat.kill();
+        }
+
 
     }
+
 } 
