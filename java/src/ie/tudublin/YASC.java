@@ -1,5 +1,7 @@
 package ie.tudublin;
 
+import java.util.ArrayList;
+
 import processing.core.PApplet;
 
 public class YASC extends PApplet {
@@ -11,7 +13,11 @@ public class YASC extends PApplet {
     // Write drawPlayer
     // Write movePlayer
 
-    Player p, p1;
+    Player p;
+    ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
+
+    // Polymorphism!
+    // The type is of the base class, but the instance is a subclass
 
     public void settings() {
         size(500, 500);
@@ -19,18 +25,36 @@ public class YASC extends PApplet {
 
     public void setup() {
         p = new Player(this, width / 2, height / 2);
-        p1 = new Player(this, 100, 100);
+
+        gameObjects.add(p);
+        gameObjects.add(new Health(this));
+        gameObjects.add(new Ammo(this));
+        
     }
 
     public void draw() {
+
+        fill(255);
         background(0);
+        text("Bullets: " + gameObjects.size(), 50, 50);
+        text("FPS: " + frameRate, 50, 100);
+        
         stroke(255);
-        p.update();
-        p.render();
-        
-        p1.update();
-        p1.render();
-        
+        for(int i = gameObjects.size() - 1; i >= 0 ; i--)
+        {
+            GameObject go = gameObjects.get(i);
+            go.update();
+            go.render();
+
+            if (go instanceof PowerUp)
+            {
+                if (dist(go.x, go.y, p.x, p.y) < go.halfW + p.halfW)
+                {
+                    ((PowerUp) go).applyTo(p);
+                    gameObjects.remove(go);
+                }
+            }
+        }
     }
 
     boolean checkKey(int k) {
